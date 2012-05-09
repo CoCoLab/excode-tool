@@ -1,0 +1,265 @@
+/* CSS for ExCode application */
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #212121;
+	text-align: center; 
+}
+
+#title {
+	margin:0px auto;
+}
+
+#shell {
+	width: 900px;
+	max-width: 900px;
+	min-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+
+a {
+	color: #339900;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #339900;
+	border-bottom: dashed 1px #37b70a;
+}
+
+
+
+a.img_link {
+	border-bottom-style: none;
+	border-bottom-width: 0px;
+}
+
+td.menu {
+	background-color: #339900;
+	padding: 5px;
+}
+
+td.menu a {
+	color: white;
+	text-decoration: none;
+	border-bottom: none;
+}
+
+td.menu a:hover {
+	color: #339900;
+	background-color: white;
+}
+
+.atext, .ahead  { 
+	font-size: 80%; 
+	font-family: Arial, Helvetica, sans-serif;  
+	color: black; 
+	text-decoration: none;
+}
+
+.atext { 
+	font-weight: bold; 
+}
+
+.ahead { 
+	font-size: 70%; 
+	text-align: right; 
+	line-height: 90%;
+}
+
+.table {
+	border-width: 0px 0px 0px 0px 
+}
+
+.tdbody { 
+	padding-left: .4em; 
+	padding-right: .4em; 
+	line-height: 90%; 
+	text-align: center; 
+	vertical-align: middle;
+ 	height: 1.7em; 
+}
+
+.tdleftside { 
+	padding-left: .25em; 
+	text-align: left; 
+	border-width: 2px 0px 2px 2px; 
+	vertical-align: middle; 
+}
+
+.tdrightside { 
+	padding-left: .25em; 
+	padding-right: .25em; 
+	text-align: center; 
+	vertical-align: middle; 
+}
+
+.tdhead { 
+	padding-right: .5em; 
+	border-width: 0px 0px 0px 0px; 
+	text-align: right; 
+	vertical-align: middle; 
+}
+
+.TM { 
+	font-size: 6px; 
+}
+
+#user_nav {
+	font-size: .9em;
+	font-weight: bold;
+	float: right;
+}
+
+#coding_nav {
+	font-size: .9em;
+	font-weight: bold;
+	float: left;
+}
+
+.focused {
+	/* background-color: #EEEEEE; */
+	background-color: #ddeed8;
+	margin-left: 4em; 
+	margin-right: 6em;
+	border: 2px #37b70a solid;
+	padding: 10px;
+}
+
+.unfocused {
+	/* background-color: #999999; */
+	color: gray;
+	margin-left: 4em; 
+	margin-right: 6em;
+	border: 1px #555555 solid;
+	padding: 10px;
+}
+
+.QorAid {
+	font-size: 10px;
+	padding: 5px;
+	margin-left: 6em; 
+	margin-right: 6em;
+}
+
+.instructions {
+	background-color: #FFFFFF; 
+	margin-left: 3em; 
+	margin-right: 3em;
+}
+
+.stat_indent {
+	margin-left: 25px;
+}
+
+.submit {
+	color: #0a68b7;
+	font-weight: bold;
+	/* border: 1px #555555 solid; */
+	padding: 5px;
+	text-align: center;
+}
+
+.bad_submit {
+	color: #b70a0a;
+	font-weight: bold;
+	/* border: 1px #555555 solid; */
+	padding: 5px;
+	text-align: center;
+}
+
+.page_title {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.Qsub {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.QAlabel {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.code_lbl {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.flag_box {
+	font-size: 12px;
+	padding: 5px;
+	/* background-color: #ff9933; */
+}
+
+.error {
+	font-weight: bold;
+	color: red;
+}
+
+.alert {
+	font-weight: bold;
+	color: orange;
+	font-size: 24px;
+}
+
+.sm_desc {
+	font-size: 14px;
+}
+
+.sm_text {
+	font-size: 10px;
+}
+
+#footer {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.align_center {
+	text-align: center;
+}
+
+tr.stripe1 {
+	background-color: #ddeed8; 
+}
+
+td {
+	border: 1px solid white;
+	padding: 3px;
+}
+
+/* progress bar */
+#qCodeBar {
+	width: 400px;
+	min-width: 400px;
+	height: 50px;
+	min-height: 50px;
+	border: 1px solid black;
+	clear: none;
+}
+
+#qCodeProg {
+	height: 50px;
+	min-height: 50px;
+	background-color: #339900;
+}
+
+#smCodeBar {
+	width: 400px;
+	min-width: 400px;
+	height: 10px;
+	min-height: 10px;
+	border: 1px solid black;
+	clear: none;
+}
+
+#smCodeProg {
+	height: 10px;
+	min-height: 10px;
+	background-color: #339900;
+}

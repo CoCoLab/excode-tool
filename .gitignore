@@ -1,0 +1,14 @@
+## ExCode specific files/directories to ignore
+docs/*
+output/*
+backups/*
+tools/*
+config.php
+test.php
+
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
