@@ -206,14 +206,18 @@ if(is_loggedin()){
 			function addCodingItemFields() {
 				itemcount++;
 				var newdiv = document.createElement('div');
-				newdiv.innerHTML = "<div class='coding_item'><br /><strong>Item Name: </strong><input type='text' name='itemname[]' /><br />" + "<strong>Item Description: </strong><textarea name='itemdesc[]'></textarea><br />" + "<strong>Item Display Type: </strong><select name='itemdisp[]'><option value=''></option><option value='rad'>radio buttons</option><option value='single_check'>single checkbox</option><option value='check_nota'>checkboxes w/ None of the Above option</option></select><br /><a onclick='addCodingItemValue()' />[add item value]</a><br /></div>";
+				newdiv.className = "coding_item";
+				newdiv.title = itemcount;
+				newdiv.innerHTML = "<br /><strong>Item Name: </strong><input type='text' name='itemname[]' /><br />" + "<strong>Item Description: </strong><textarea name='itemdesc[]'></textarea><br />" + "<strong>Item Display Type: </strong><select name='itemdisp[]'><option value=''></option><option value='rad'>radio buttons</option><option value='single_check'>single checkbox</option><option value='check_nota'>checkboxes w/ None of the Above option</option></select><br /><a onclick='addCodingItemValue()' />[add item value]</a><br />";
 				document.getElementById('coding_items').appendChild(newdiv);
 			}
 			
 			function addCodingItemValue() {
+				var item_id = event.target.parentNode.title;
 				var newdiv = document.createElement('div');
-				newdiv.innerHTML = "<br /><strong>Option Description: </strong><input type='text' name='item"+ itemcount + "valdesc[]' /><br /><strong>Option Value: </strong><input type='text' name='item"+ itemcount + "value[]' /><br />";
-				document.getElementById('coding_items').appendChild(newdiv);
+				newdiv.className = "coding_values";
+				newdiv.innerHTML = "<br /><strong>Option Description: </strong><input type='text' name='item" + item_id + "valdesc[]' /><br /><strong>Option Value: </strong><input type='text' name='item" + item_id + "value[]' /><br />";
+				event.target.parentNode.appendChild(newdiv);
 			}
 		</script>
 		
@@ -232,10 +236,12 @@ if(is_loggedin()){
 		<input type='text' name='clustername' value=''size='25' /><br /><br />
 		<strong><u>Coding Items</u></strong><br />
 		<div id='coding_items'>
-			<div class='coding_item'>
+			<div class='coding_item' title='0'>
 			<br /><strong>Item Name: </strong><input type='text' name='itemname[]' /><br />
 			<strong>Item Description: </strong><textarea name='itemdesc[]'></textarea><br />
-			<strong>Item Display Type: </strong><select name='itemdisp[]'><option value=''></option><option value='rad'>radio buttons</option><option value='single_check'>single checkbox</option><option value='check_nota'>checkboxes w/ None of the Above option</option></select><br /><a onclick='addCodingItemValue()' />[add item value]</a><br />
+			<strong>Item Display Type: </strong><select name='itemdisp[]'><option value=''></option><option value='rad'>radio buttons</option><option value='single_check'>single checkbox</option><option value='check_nota'>checkboxes w/ None of the Above option</option></select><br />
+			
+			<a onclick='addCodingItemValue()' />[add item value]</a><br />
 			</div>
 		
 		</div><br />
