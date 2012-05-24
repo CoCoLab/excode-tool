@@ -257,6 +257,13 @@ ul.nav_list li {
 	font-weight: bold;
 }
 
+#flag_scroll {
+	width: 400px;
+	height: 300px;
+	max-height: 300px;
+	overflow-y: scroll;
+}
+
 /* progress bar */
 #qCodeBar {
 	width: 400px;

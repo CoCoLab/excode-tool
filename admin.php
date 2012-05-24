@@ -80,6 +80,7 @@ if(is_loggedin()){
 		<a name='unresolved_coding_flags'></a>
 		<span class='Qsub'>Unresolved Coding Flags</span><br /><br />
 		<div class='stat_indent'>
+			<div id='flag_scroll'>
 		<?
 		$flags = get_flags();
 		//print_r($flags);
@@ -103,13 +104,14 @@ if(is_loggedin()){
 		}
 		
 		?>
+			</div>
 		</div>
 		<br />
 		
 		<a name='unresolved_question-answer_flags'></a>
 		<span class='Qsub'>Unresolved Question/Answer Flags</span><br /><br />
 		<div class='stat_indent'>
-		
+			<span class='alert'>Still in development!</span><br /><br />
 		</div>
 		<br />
 		
