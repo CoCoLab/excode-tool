@@ -31,6 +31,10 @@ if(is_loggedin()){
 				}
 				break;
 			case "add_cluster":
+				print('<pre>');
+				print_r($_GET);
+				print('</pre>');
+				 
 				if($_GET['qora'] == ""){
 					$url_array = parse_url($ref_url);
 					$base_url = $url_array['path'];
@@ -82,8 +86,6 @@ if(is_loggedin()){
 				$cat_id = "c".$cat_num;
 				
 				$cluster_sql = "INSERT INTO $cat_table (cat_id, cat_name) VALUES ('$cat_id', '$cat_name')";
-				//echo $cluster_sql;
-				//$cluster_result = mysql_query($cluster_sql) or die ("MySQL error: ".mysql_error());
 				
 				$item_sql = array();
 				$item_ids = array();
@@ -91,7 +93,7 @@ if(is_loggedin()){
 				
 				$num_items = mysql_num_rows(mysql_query("SELECT * FROM $item_table"));
 				$item_id = $num_items + 1;
-				$item_num = 1;
+				$item_num = 0;
 				foreach($item_names as $key=>$item_name){
 					$the_item_name = strtoupper($item_name);
 					$the_item_desc = $_GET['itemdesc'][$key];
@@ -100,6 +102,7 @@ if(is_loggedin()){
 					$item_sql[] = "INSERT INTO $item_table (item_id, item_name, item_desc, item_cat, val_disp) VALUES ('$item_id', '$the_item_name', '$the_item_desc', '$cat_id', '$the_item_disp')";
 					
 					$itemvalarr = "item".$item_num."value";
+					echo $itemvalarr."<br />";
 					foreach($_GET["$itemvalarr"] as $v_key=>$value){
 						$itemvaldescarr = "item".$item_num."valdesc";
 						$val_desc = $_GET["$itemvaldescarr"][$v_key];
@@ -111,7 +114,15 @@ if(is_loggedin()){
 					$item_num++;
 					$item_id++;	
 				}
-								
+				
+				echo "<pre>";
+				echo $cluster_sql."<br />";
+				print_r($item_sql);
+				print_r($value_sql);
+				echo "</pre>";
+				
+				// At this point SQL queries start getting executed.
+				 				
 				// add the cluster, items, and value to the database
 				$cluster_result = mysql_query($cluster_sql) or die ("MySQL error: ".mysql_error());
 				foreach($item_sql as $i_query) {
@@ -120,7 +131,7 @@ if(is_loggedin()){
 				foreach($value_sql as $v_query){
 					$value_result = mysql_query($v_query) or die ("MySQL error: ".mysql_error());
 				}
-				
+				/* 
 				// add coding items for the new items (I want to make sure items get added before they are added as codings)
 				$qora_sql = "SELECT $qora_col FROM $qora_table WHERE valid='1'";
 				$qora_result = mysql_query($qora_sql) or die ("MySQL error: ".mysql_error());
@@ -134,9 +145,8 @@ if(is_loggedin()){
 					}	
 				}
 								
-				// actually make the addition if it gets to this part
 				$head_url = "Location: ".$ref_url;
-				header($head_url);
+				header($head_url); */
 				break;
 			case "add_unadded_codings":
 				$stage = $_GET['stage'];

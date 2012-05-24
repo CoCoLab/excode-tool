@@ -10,6 +10,23 @@ layout_header("Admin");
 if(is_loggedin()){
 	layout_menu();
 	if(is_admin($coderID)) {
+		?>
+		<div id='admin_nav' class='section_nav'>
+			<ul class='nav_list'>
+				<li><a href='#coder_stats' title='Coder Stats'>Coder Stats</a></li>
+				<li><a href='#unresolved_coding_flags' title='Unresolved Coding Flags'>Unresolved Coding Flags</a></li>
+				<li><a href='#unresolved_question-answer_flags' title='Unresolved Question/Answer Flags'>Unresolved Question/Answer Flags</a></li>
+				<li><a href='#view-export_data' title='View/Export Data'>View/Export Data</a></li>
+				<li><a href='#validate_data' title='Validate Data'>Validate Data</a></li>
+				<li><a href='#add_coding_cluster' title='Add Coding Cluster'>Add Coding Cluster</a></li>
+				<li><a href='#add_coding_cluster_to_project' title='Add Coding Cluster To Project'>Add Coding Cluster To Project</a></li>
+				<li><a href='#add_new_questions-answers' title='Add New Questions/Answers'>Add New Questions/Answers</a></li>
+				<li><a href='#set_up_valid_questions-answers_for_coding' title='Set Up Valid Questions/Answers For Coding'>Set Up Valid Questions/Answers For Coding</a></li>
+				<li><a href='#add-remove_admins' title='Add/Remove Admins'>Add/Remove Admins</a></li>
+			</ul>
+		</div>
+		<?
+	
 		if($_GET['alert'] != "") {
 			echo "<div class='submit'>".$_GET['alert']."</div>\n";
 		}
@@ -25,6 +42,7 @@ if(is_loggedin()){
 		$isoWeekEndTime = $isoWeekStartTime + (60*60*24*7);
 		
 		echo "<br />";
+		//echo "<a name='coder_stats'></a>";
 		echo "<span class='Qsub'>Coder Stats (week of: $weekStartDate - $weekEndDate)</span><br /><br />";
 		echo "<div class='stat_indent'>";
 		echo "<table><tr>";
@@ -59,7 +77,7 @@ if(is_loggedin()){
 		</table>
 		</div>
 		<br />
-		
+		<a name='unresolved_coding_flags'></a>
 		<span class='Qsub'>Unresolved Coding Flags</span><br /><br />
 		<div class='stat_indent'>
 		<?
@@ -88,12 +106,14 @@ if(is_loggedin()){
 		</div>
 		<br />
 		
+		<a name='unresolved_question-answer_flags'></a>
 		<span class='Qsub'>Unresolved Question/Answer Flags</span><br /><br />
 		<div class='stat_indent'>
 		
 		</div>
 		<br />
 		
+		<a name='view-export_data'></a>
 		<span class='Qsub'>View/Export Data</span><br /><br />
 		<?
 			$projects = get_project_info();
@@ -192,6 +212,7 @@ if(is_loggedin()){
 		</form>
 		</div><br />
 		
+		<a name='validate_data'></a>
 		<span class='Qsub'>Validate Data</span><br /><br />
 		<div class='stat_indent'>
 			<span class='alert'>Still in development!</span><br /><br />
@@ -221,6 +242,7 @@ if(is_loggedin()){
 			}
 		</script>
 		
+		<a name='add_coding_cluster'></a>
 		<span class='Qsub'>Add Coding Cluster</span><br /><br />
 		<div class='stat_indent'>
 		<span class='alert'>Try with caution...(needs more testing)</span><br /><br />
@@ -251,11 +273,19 @@ if(is_loggedin()){
 		</form>
 		</div><br />
 		
+		<a name='add_coding_cluster_to_project'></a>
+		<span class='Qsub'>Add Coding Cluster To Project</span><br /><br />
+		<div class='stat_indent'>
+			Select a cluster and a project.  Add coding items for that cluster to questions/answers in that project.
+		</div><br />
+		
+		<a name='add_new_questions-answers'></a>
 		<span class='Qsub'>Add New Questions/Answers</span><br /><br />
 		<div class='stat_indent'>
 			<a href="ya_pull.php">Add Questions/Answers From Yahoo! Answers</a><br />
 		</div><br />
 		
+		<a name='set_up_valid_questions-answers_for_coding'></a>
 		<span class='Qsub'>Set Up Valid Questions/Answers For Coding</span><br /><br />
 		<div class='stat_indent'>
 			<em>All new questions/answers must be precoded before they are added to stage 3 or 4 for coding.</em><br />
@@ -282,6 +312,7 @@ if(is_loggedin()){
 			<br />
 		</div><br />
 		
+		<a name='add-remove_admins'></a>
 		<?
 		echo "<span class='Qsub'>Add/Remove Admins</span><br /><br />";
 		echo "<div class='stat_indent'>";
