@@ -447,6 +447,30 @@ function get_project_parameters($type,$project) {
 	return $parameters;
 }
 
+function get_category_info($q_or_a, $precode=false) {
+	if($q_or_a == "q"){
+		$cat_table = "questioncategories";
+	}
+	else {
+		$cat_table = "answercategories";
+	}
+	
+	if($precode) {
+		$not_precoding = "";
+	}
+	else {
+		$not_precoding = "WHERE cat_name NOT LIKE '%PRECOD%'";
+	}
+	
+	$sql = "SELECT cat_id, cat_name, cat_desc FROM $cat_table $not_precoding";
+	$result = mysql_query($sql) or die ("MySQL error: ".mysql_error());
+	while($row = mysql_fetch_array($result)){
+		$categories[] = $row;
+	}
+	
+	return $categories;
+}
+
 function get_coding_category($type,$codingId) {
 	# select from the proper category for the type
 	if($type == "1" || $type == "3") {
@@ -1392,8 +1416,8 @@ function db_connect() {
 	$dbHostname = $db_host; 
 	$dbUsername = $db_username;
 	$dbPassword = $db_password;
-	$dbname = $db_name;
-	//$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
+	//$dbname = $db_name;
+	$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
 	
 
 	$con = mysql_connect($dbHostname, $dbUsername,$dbPassword);
@@ -1551,7 +1575,7 @@ END;
 </tr>
 </table>
 END;
-//echo "<span class='alert'>CURRENTLY USING THE TEST DATABASE.  ANY CODINGS/CHANGES MADE AT THIS TIME WILL NOT AFFECT THE REAL DATA.- Dave</span><br />";
+echo "<span class='alert'>CURRENTLY USING THE TEST DATABASE.  ANY CODINGS/CHANGES MADE AT THIS TIME WILL NOT AFFECT THE REAL DATA.- Dave</span><br />";
 //echo "<span class='alert'>I'M DOING STUFF TO THE NAVIGATION, PLEASE STAY CALM. - Dave</span><br />";
 }
 

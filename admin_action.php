@@ -150,12 +150,21 @@ if(is_loggedin()){
 				break;
 			case "add_cluster_to_project":
 				$cluster = $_GET['cluster'];
+				$q_or_a = $_GET['q_or_a'];
 				$project = $_GET['project'];
 				
 				if($cluster == "" || $project == "") {
 					$url_array = parse_url($ref_url);
 					$base_url = $url_array['path'];
 					header("Location: $base_url?error=Unable to add cluster to project.  Missing cluster or project info.");
+				}
+				elseif () {
+					// check to make sure that this clusters isn't already added for these questions or answers
+				}
+				else {
+					// add cluster to projectkeys
+					
+					// add coding items for new cluster in project questions or answers
 				}
 				
 				break;

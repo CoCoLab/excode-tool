@@ -282,14 +282,33 @@ if(is_loggedin()){
 			<br />
 			<form name='add_cluster_to_project' method='GET' action='admin_action.php'>
 				<input type='hidden' name='action' value='add_cluster_to_project' />
-				<strong>Cluster: </strong> 
+				Add <br />
+				<strong>Question or Answers Cluster: </strong> 
 				<select name='cluster'>
 					<option value='' selected='selected'></option>
-				</select>	
+					<?
+						$q_cats = get_category_info("q");
+						$a_cats = get_category_info("a");
+						foreach($q_cats as $cat){
+							printf("<option value='%s'>QUESTION - %s</option>",$cat['cat_id'],$cat['cat_name']);
+						}
+						foreach($a_cats as $cat){
+							printf("<option value='%s'>ANSWER - %s</option>",$cat['cat_id'],$cat['cat_name']);
+						}
+					
+					?>
+				</select><br />
+				to
 				<br />
 				<strong>Project: </strong> 
 				<select name='project'>
 					<option value='' selected='selected'></option>
+					<?
+						$projects = get_project_info();
+						foreach($projects as $project) {
+							printf("<option value='%s'>%s</option>",$project['id'],$project['name']);
+						}
+					?>
 				</select>	
 				<br />
 				<br />
