@@ -247,7 +247,6 @@ if(is_loggedin()){
 		<a name='add_coding_cluster'></a>
 		<span class='Qsub'>Add Coding Cluster</span><br /><br />
 		<div class='stat_indent'>
-		<span class='alert'>Try with caution...(needs more testing)</span><br /><br />
 		<form name='add_cluster' method='GET' action='admin_action.php'>
 		<input type='hidden' name='action' value='add_cluster' />
 		<strong>Question or Answer Cluster:</strong> 
@@ -278,7 +277,24 @@ if(is_loggedin()){
 		<a name='add_coding_cluster_to_project'></a>
 		<span class='Qsub'>Add Coding Cluster To Project</span><br /><br />
 		<div class='stat_indent'>
-			Select a cluster and a project.  Add coding items for that cluster to questions/answers in that project.
+			<span class='alert'>Still in development!</span><br /><br />
+			<i>Select a cluster and a project.  Add coding items for that cluster to questions/answers in that project.</i><br />
+			<br />
+			<form name='add_cluster_to_project' method='GET' action='admin_action.php'>
+				<input type='hidden' name='action' value='add_cluster_to_project' />
+				<strong>Cluster: </strong> 
+				<select name='cluster'>
+					<option value='' selected='selected'></option>
+				</select>	
+				<br />
+				<strong>Project: </strong> 
+				<select name='project'>
+					<option value='' selected='selected'></option>
+				</select>	
+				<br />
+				<br />
+				<a onclick="document['add_cluster_to_project'].submit()">[add cluster to project]</a>
+			</form>
 		</div><br />
 		
 		<a name='add_new_questions-answers'></a>

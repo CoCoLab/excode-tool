@@ -148,6 +148,17 @@ if(is_loggedin()){
 				$head_url = "Location: ".$ref_url;
 				header($head_url); */
 				break;
+			case "add_cluster_to_project":
+				$cluster = $_GET['cluster'];
+				$project = $_GET['project'];
+				
+				if($cluster == "" || $project == "") {
+					$url_array = parse_url($ref_url);
+					$base_url = $url_array['path'];
+					header("Location: $base_url?error=Unable to add cluster to project.  Missing cluster or project info.");
+				}
+				
+				break;
 			case "add_unadded_codings":
 				$stage = $_GET['stage'];
 				
