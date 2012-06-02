@@ -290,10 +290,10 @@ if(is_loggedin()){
 						$q_cats = get_category_info("q");
 						$a_cats = get_category_info("a");
 						foreach($q_cats as $cat){
-							printf("<option value='%s'>QUESTION - %s</option>",$cat['cat_id'],$cat['cat_name']);
+							printf("<option value='q_%s'>QUESTION - %s</option>",$cat['cat_id'],$cat['cat_name']);
 						}
 						foreach($a_cats as $cat){
-							printf("<option value='%s'>ANSWER - %s</option>",$cat['cat_id'],$cat['cat_name']);
+							printf("<option value='a_%s'>ANSWER - %s</option>",$cat['cat_id'],$cat['cat_name']);
 						}
 					
 					?>

@@ -447,6 +447,19 @@ function get_project_parameters($type,$project) {
 	return $parameters;
 }
 
+
+function cluster_in_project($project,$cluster,$q_or_a) {
+	$sql = sprintf("SELECT id FROM projectkeys WHERE key_type = '%s_cat' AND value='%s' AND proj_id='%s'",$q_or_a,$cluster,$project);
+	$result = mysql_query($sql) or die ("MySQL error: ".mysql_error());
+	if(mysql_num_rows($result) > 0){
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+}
+
 function get_category_info($q_or_a, $precode=false) {
 	if($q_or_a == "q"){
 		$cat_table = "questioncategories";
