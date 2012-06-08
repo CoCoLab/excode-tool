@@ -10,6 +10,7 @@ if(is_loggedin()){
 		$ref_url = $_SERVER['HTTP_REFERER'];
 		$action = $_GET['action'];
 		db_connect();
+		$db = pdo_connect(); // starting to upgrade to PDO database conenctions
 		
 		switch($action) {
 			case "remove_admin":
@@ -102,7 +103,7 @@ if(is_loggedin()){
 					$item_sql[] = "INSERT INTO $item_table (item_id, item_name, item_desc, item_cat, val_disp) VALUES ('$item_id', '$the_item_name', '$the_item_desc', '$cat_id', '$the_item_disp')";
 					
 					$itemvalarr = "item".$item_num."value";
-					echo $itemvalarr."<br />";
+					//echo $itemvalarr."<br />";
 					foreach($_GET["$itemvalarr"] as $v_key=>$value){
 						$itemvaldescarr = "item".$item_num."valdesc";
 						$val_desc = $_GET["$itemvaldescarr"][$v_key];
@@ -115,11 +116,11 @@ if(is_loggedin()){
 					$item_id++;	
 				}
 				
-				echo "<pre>";
+				/*echo "<pre>";
 				echo $cluster_sql."<br />";
 				print_r($item_sql);
 				print_r($value_sql);
-				echo "</pre>";
+				echo "</pre>"; */
 				
 				// At this point SQL queries start getting executed.
 				 				
@@ -131,26 +132,14 @@ if(is_loggedin()){
 				foreach($value_sql as $v_query){
 					$value_result = mysql_query($v_query) or die ("MySQL error: ".mysql_error());
 				}
-				/* 
-				// add coding items for the new items (I want to make sure items get added before they are added as codings)
-				$qora_sql = "SELECT $qora_col FROM $qora_table WHERE valid='1'";
-				$qora_result = mysql_query($qora_sql) or die ("MySQL error: ".mysql_error());
 				
-				while($row = mysql_fetch_array($qora_result)) {
-					$qora_id = $row["$quora_col"];
-					foreach($item_ids as $item_id){
-						$coding_sql = "INSERT INTO codings (coder_id, q_or_a_id, item_type, item_id, coded_value, timestamp) VALUES ('-1', '$qora_id', '$stage', '$item_id', '-1', '-1')";
-						$coding_result = mysql_query($coding_sql) or die ("MySQL error: ".mysql_error());
-						$coding_result = mysql_query($coding_sql) or die ("MySQL error: ".mysql_error()); // do this twice to get 2 entries 	
-					}	
-				}
-								
-				$head_url = "Location: ".$ref_url;
-				header($head_url); */
+				// And now that everything worked, return to Admin page				
+				$url_array = parse_url($ref_url);
+				$base_url = $url_array['path'];
+				header("Location: $base_url?alert=New cluster added.");
 				break;
 			case "add_cluster_to_project":
 				$cluster = $_GET['cluster'];
-				$q_or_a = $_GET['q_or_a'];
 				$project = $_GET['project'];
 				
 				if($cluster == "" || $project == "") {
@@ -158,13 +147,77 @@ if(is_loggedin()){
 					$base_url = $url_array['path'];
 					header("Location: $base_url?error=Unable to add cluster to project.  Missing cluster or project info.");
 				}
-				elseif () {
+				else {
+					$q_or_a = substr($cluster,0,1);
+					$cluster = substr($cluster,2);
+				}
+				
+				if(cluster_in_project($project,$cluster,$q_or_a)) {
 					// check to make sure that this clusters isn't already added for these questions or answers
+					$url_array = parse_url($ref_url);
+					$base_url = $url_array['path'];
+					header("Location: $base_url?error=Cluster not added.  That cluster is already apart of that project.");
 				}
 				else {
+					// start transaction
+					mysql_query("SET AUTOCOMMIT=0");
+					mysql_query("START TRANSACTION");
+				
 					// add cluster to projectkeys
+					$key_type = $q_or_a."_cat";
+					$keys_sql = "INSERT INTO projectkeys (key_type,value,proj_id) VALUES ('$key_type','$cluster','$project')";
+					$keys_result = mysql_query($keys_sql) or die ("MySQL error: ".mysql_error());
+					//echo $keys_sql."<br />";
 					
 					// add coding items for new cluster in project questions or answers
+					if($q_or_a == "q") {
+						$qora_table = "questions";
+						$qora_col = "question_id";
+						$stage = 3;
+					}
+					else {
+						$qora_table = "answers";
+						$qora_col = "answer_id";
+						$stage = 4;
+					}
+					$project_parameters = get_project_parameters(null,$project);
+					$pulls = join(',',$project_parameters['pulls']);
+					
+					// NEED TO PULL IN INFO ABOUT THE ITEMS IN THE CLUSTER TO ADD FOR $item_ids
+					$item_info = get_cluster_items($cluster,$q_or_a);
+					
+					$qora_sql = "SELECT $qora_col FROM $qora_table WHERE valid='1' AND pull_id IN ($pulls)";
+					//echo $qora_sql."<br />";
+					$qora_result = mysql_query($qora_sql) or die ("MySQL error: ".mysql_error());
+					
+					$insert_count = 0;
+					$insert_ok = true;
+					while($row = mysql_fetch_array($qora_result)) {
+						$qora_id = $row["$qora_col"];
+						foreach($item_info as $item){
+							$item_id = $item['item_id'];
+							$coding_sql = "INSERT INTO codings (coder_id, q_or_a_id, item_type, item_id, coded_value, timestamp) VALUES ('-1', '$qora_id', '$stage', '$item_id', '-1', '-1')";
+							//echo $coding_sql."<br />";
+							$insert_count += 2;
+							$coding_result1 = mysql_query($coding_sql) or die ("MySQL error: ".mysql_error());
+							$coding_result2 = mysql_query($coding_sql) or die ("MySQL error: ".mysql_error()); // do this twice to get 2 entries
+							$insert_ok = $insert_ok && $coding_result1 && $coding_result2; 	
+						}	
+					}
+					
+					if($keys_result && $insert_ok) {
+						mysql_query("COMMIT");
+						$url_array = parse_url($ref_url);
+						$base_url = $url_array['path'];
+						header("Location: $base_url?alert=$insert_count new coding items added to project.");
+					}
+					else {
+						mysql_query("ROLLBACK");
+						$url_array = parse_url($ref_url);
+						$base_url = $url_array['path'];
+						header("Location: $base_url?error=Cluster not added.  A database error was encountered.");
+					}					
+					
 				}
 				
 				break;

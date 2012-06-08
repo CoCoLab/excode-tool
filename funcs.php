@@ -460,6 +460,22 @@ function cluster_in_project($project,$cluster,$q_or_a) {
 	
 }
 
+function get_cluster_items($cluster,$q_or_a) {
+	if($q_or_a == "q"){
+		$items_table = "questionitems";
+	}
+	else {
+		$items_table = "answeritems";
+	}
+	$sql = "SELECT item_id, item_name, item_desc, val_disp FROM $items_table WHERE item_cat = '$cluster'";
+	$result = mysql_query($sql) or die ("MySQL error: ".mysql_error());
+	while($row = mysql_fetch_array($result)){
+		$cluster_items[] = $row;
+	}
+	
+	return $cluster_items;
+}
+
 function get_category_info($q_or_a, $precode=false) {
 	if($q_or_a == "q"){
 		$cat_table = "questioncategories";
@@ -1435,6 +1451,24 @@ function db_connect() {
 
 	$con = mysql_connect($dbHostname, $dbUsername,$dbPassword);
 	return mysql_select_db($dbname, $con);
+}
+
+function pdo_connect() {
+	include("config.php");
+	
+	$dbHostname = $db_host; 
+	$dbUsername = $db_username;
+	$dbPassword = $db_password;
+	//$dbname = $db_name;
+	$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
+	
+	try {
+		$db = new PDO("mysql:host=$dbHostname;dbname=$dbname", $dbUsername, $dbPassword);
+		return $db;
+	}
+	catch(PDOException $e) {
+    	echo $e->getMessage();
+    }
 }
 
 /****************************

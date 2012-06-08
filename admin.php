@@ -277,7 +277,6 @@ if(is_loggedin()){
 		<a name='add_coding_cluster_to_project'></a>
 		<span class='Qsub'>Add Coding Cluster To Project</span><br /><br />
 		<div class='stat_indent'>
-			<span class='alert'>Still in development!</span><br /><br />
 			<i>Select a cluster and a project.  Add coding items for that cluster to questions/answers in that project.</i><br />
 			<br />
 			<form name='add_cluster_to_project' method='GET' action='admin_action.php'>
