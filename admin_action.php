@@ -16,19 +16,40 @@ if(is_loggedin()){
 			case "remove_admin":
 				$remove_id = $_GET['id'];
 				if($remove_id != "") {
-					$sql = "UPDATE coders SET is_admin='0' WHERE coder_id='$remove_id'";
-					$result = mysql_query($sql) or die ("MySQL error: ".mysql_error());
-					$head_url = "Location: ".$ref_url;
-					header($head_url);
+					$db->beginTransaction();
+					$st = $db->prepare("UPDATE coders SET is_admin='0' WHERE coder_id= :id");
+					$ok = $st->execute(array(':id' => $remove_id));
+					
+					if($ok) {
+						$db->commit();
+						action_redirect($ref_url,'alert',"Admin removed.");
+					}
+					else {
+						$db->rollBack();
+						action_redirect($ref_url,'error',"Database error, admin not removed.");
+					}
+				}
+				else {
+					action_redirect($ref_url,'error',"Coder ID not specified, admin not removed.");
 				}
 				break;
 			case "add_admin":
 				$add_id = $_GET['id'];
 				if($add_id != "") {
-					$sql = "UPDATE coders SET is_admin='1' WHERE coder_id='$add_id'";
-					$result = mysql_query($sql) or die ("MySQL error: ".mysql_error());
-					$head_url = "Location: ".$ref_url;
-					header($head_url);
+					$db->beginTransaction();
+					$st = $db->prepare("UPDATE coders SET is_admin='1' WHERE coder_id= :id");
+					$ok = $st->execute(array(':id' => $add_id));
+					if($ok) {
+						$db->commit();
+						action_redirect($ref_url,'alert',"Admin added.");
+					}
+					else {
+						$db->rollBack();
+						action_redirect($ref_url,'error',"Database error, admin not added.");
+					}
+				}
+				else {
+					action_redirect($ref_url,'error',"Coder ID not specified, admin not added.");
 				}
 				break;
 			case "add_cluster":
@@ -37,19 +58,13 @@ if(is_loggedin()){
 				print('</pre>');
 				 
 				if($_GET['qora'] == ""){
-					$url_array = parse_url($ref_url);
-					$base_url = $url_array['path'];
-					header("Location: $base_url?error=Unable to submit new cluster.  Specify question or answer cluster.");
+					action_redirect($ref_url,'error',"Unable to submit new cluster.  Specify question or answer cluster.");
 				}
 				elseif($_GET['clustername'] == "") {
-					$url_array = parse_url($ref_url);
-					$base_url = $url_array['path'];
-					header("Location: $base_url?error=Unable to submit new cluster.  Cluster name must be provided.");
+					action_redirect($ref_url,'error',"Unable to submit new cluster.  Cluster name must be provided.");
 				}
 				elseif(count($_GET['itemname']) < 1) {
-					$url_array = parse_url($ref_url);
-					$base_url = $url_array['path'];
-					header("Location: $base_url?error=Unable to submit new cluster.  Must include at least 1 coding item.");
+					action_redirect($ref_url,'error',"Unable to submit new cluster.  Must include at least 1 coding item.");
 				}
 				else {
 					$item_names = $_GET['itemname'];
@@ -57,9 +72,7 @@ if(is_loggedin()){
 					$item_disp = $_GET['itemdisp'];
 					foreach($item_names as $key=>$item_name){
 						if($item_name == "" || $item_desc[$key] == "" || $item_disp[$key] == "") {
-							$url_array = parse_url($ref_url);
-							$base_url = $url_array['path'];
-							header("Location: $base_url?error=Unable to submit new cluster.  You are missing details from one of your coding items.");	
+							action_redirect($ref_url,'error',"Unable to submit new cluster.  You are missing details from one of your coding items.");	
 						}
 					}
 				}
@@ -82,9 +95,20 @@ if(is_loggedin()){
 					$value_table = "aitemvalues";	
 				}
 				$cat_name = strtoupper($_GET['clustername']);
+				
+				/*
+				$db->beginTransaction();
+				
+				$num_sql = "SELECT COUNT(*) FROM $cat_table";
+				$res = $db->query($num_sql);
+				$num_clusters = $res->fetchColumn(); */
+				
 				$num_clusters = mysql_num_rows(mysql_query("SELECT * FROM $cat_table"));
+				
 				$cat_num = $num_clusters + 1;
 				$cat_id = "c".$cat_num;
+				
+				
 				
 				$cluster_sql = "INSERT INTO $cat_table (cat_id, cat_name) VALUES ('$cat_id', '$cat_name')";
 				
@@ -116,11 +140,6 @@ if(is_loggedin()){
 					$item_id++;	
 				}
 				
-				/*echo "<pre>";
-				echo $cluster_sql."<br />";
-				print_r($item_sql);
-				print_r($value_sql);
-				echo "</pre>"; */
 				
 				// At this point SQL queries start getting executed.
 				 				
@@ -133,19 +152,15 @@ if(is_loggedin()){
 					$value_result = mysql_query($v_query) or die ("MySQL error: ".mysql_error());
 				}
 				
-				// And now that everything worked, return to Admin page				
-				$url_array = parse_url($ref_url);
-				$base_url = $url_array['path'];
-				header("Location: $base_url?alert=New cluster added.");
+				// And now that everything worked, return to Admin page
+				action_redirect($ref_url,'alert',"New cluster added.");
 				break;
 			case "add_cluster_to_project":
 				$cluster = $_GET['cluster'];
 				$project = $_GET['project'];
 				
 				if($cluster == "" || $project == "") {
-					$url_array = parse_url($ref_url);
-					$base_url = $url_array['path'];
-					header("Location: $base_url?error=Unable to add cluster to project.  Missing cluster or project info.");
+					action_redirect($ref_url,'error',"Unable to add cluster to project.  Missing cluster or project info.");
 				}
 				else {
 					$q_or_a = substr($cluster,0,1);
@@ -154,9 +169,7 @@ if(is_loggedin()){
 				
 				if(cluster_in_project($project,$cluster,$q_or_a)) {
 					// check to make sure that this clusters isn't already added for these questions or answers
-					$url_array = parse_url($ref_url);
-					$base_url = $url_array['path'];
-					header("Location: $base_url?error=Cluster not added.  That cluster is already apart of that project.");
+					action_redirect($ref_url,'error',"Cluster not added.  That cluster is already apart of that project.");
 				}
 				else {
 					// start transaction
@@ -167,7 +180,7 @@ if(is_loggedin()){
 					$key_type = $q_or_a."_cat";
 					$keys_sql = "INSERT INTO projectkeys (key_type,value,proj_id) VALUES ('$key_type','$cluster','$project')";
 					$keys_result = mysql_query($keys_sql) or die ("MySQL error: ".mysql_error());
-					//echo $keys_sql."<br />";
+					
 					
 					// add coding items for new cluster in project questions or answers
 					if($q_or_a == "q") {
@@ -207,15 +220,11 @@ if(is_loggedin()){
 					
 					if($keys_result && $insert_ok) {
 						mysql_query("COMMIT");
-						$url_array = parse_url($ref_url);
-						$base_url = $url_array['path'];
-						header("Location: $base_url?alert=$insert_count new coding items added to project.");
+						action_redirect($ref_url,'alert',"$insert_count new coding items added to project.");
 					}
 					else {
 						mysql_query("ROLLBACK");
-						$url_array = parse_url($ref_url);
-						$base_url = $url_array['path'];
-						header("Location: $base_url?error=Cluster not added.  A database error was encountered.");
+						action_redirect($ref_url,'error',"Cluster not added.  A database error was encountered.");
 					}					
 					
 				}
@@ -255,10 +264,7 @@ if(is_loggedin()){
 				}
 				else {
 					// bad stage
-					$url_array = parse_url($ref_url);
-					$base_url = $url_array['path'];
-					header("Location: $base_url?error=bad stage value for adding codings");
-					
+					action_redirect($ref_url,'error',"Bad stage value for adding codings.");
 				}
 								
 				$sql_items = "SELECT * FROM $item_table WHERE $range_item_id";
@@ -275,18 +281,14 @@ if(is_loggedin()){
 					}	
 				}
 				
-				$url_array = parse_url($ref_url);
-				$base_url = $url_array['path'];
-				header("Location: $base_url?alert=$item_count new coding items added.");
+				action_redirect($ref_url,'alert',"$item_count new coding items added.");
 				break;
 			case "resolve_flag":
 				$flag_id = $_GET['flag_id'];
 				$sql = "UPDATE flags SET resolved = '1' WHERE id = $flag_id";
 				$result =  mysql_query($sql) or die ("MySQL error: ".mysql_error());
 				
-				$url_array = parse_url($ref_url);
-				//$base_url = $url_array['path'];  // All resolutions should redirect back to the Admin page.
-				$base_url = "/excode/admin.php";
+				$base_url = "/excode/admin.php";// All resolutions should redirect back to the Admin page.
 				header("Location: $base_url?alert=Flag resolved.");				
 				break; 
 			case "validate_coding":

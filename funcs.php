@@ -1319,6 +1319,17 @@ function get_coding_info($id) {
 	
 }
 
+/*
+$ref_url : pulled from $_SERVER['HTTP_REFERER'];
+$type : 'error' or 'alert'
+*/
+function action_redirect($ref_url,$type,$message="") {
+	$url_array = parse_url($ref_url);
+	$base_url = $url_array['path'];
+	$header_str = "Location: $base_url?$type=$message";
+	header($header_str);
+}
+
 
 /****************************
 Yahoo! Answers Pull Functions
@@ -1445,8 +1456,8 @@ function db_connect() {
 	$dbHostname = $db_host; 
 	$dbUsername = $db_username;
 	$dbPassword = $db_password;
-	//$dbname = $db_name;
-	$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
+	$dbname = $db_name;
+	//$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
 	
 
 	$con = mysql_connect($dbHostname, $dbUsername,$dbPassword);
@@ -1459,8 +1470,8 @@ function pdo_connect() {
 	$dbHostname = $db_host; 
 	$dbUsername = $db_username;
 	$dbPassword = $db_password;
-	//$dbname = $db_name;
-	$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
+	$dbname = $db_name;
+	//$dbname = $db_testname; // THE TEST DATABASE IT'S OK TO SCREW UP THE DATA HERE!
 	
 	try {
 		$db = new PDO("mysql:host=$dbHostname;dbname=$dbname", $dbUsername, $dbPassword);
@@ -1622,7 +1633,7 @@ END;
 </tr>
 </table>
 END;
-echo "<span class='alert'>CURRENTLY USING THE TEST DATABASE.  ANY CODINGS/CHANGES MADE AT THIS TIME WILL NOT AFFECT THE REAL DATA.- Dave</span><br />";
+//echo "<span class='alert'>CURRENTLY USING THE TEST DATABASE.  ANY CODINGS/CHANGES MADE AT THIS TIME WILL NOT AFFECT THE REAL DATA.- Dave</span><br />";
 //echo "<span class='alert'>I'M DOING STUFF TO THE NAVIGATION, PLEASE STAY CALM. - Dave</span><br />";
 }
 
